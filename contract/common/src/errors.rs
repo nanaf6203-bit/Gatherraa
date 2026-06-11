@@ -33,17 +33,17 @@ pub mod error_messages {
     
     pub fn get_message(code: u32) -> String {
         match code {
-            error_codes::INVALID_INPUT => String::from_slice(&String::from_str(INVALID_INPUT).to_val()),
-            error_codes::UNAUTHORIZED => String::from_slice(&String::from_str(UNAUTHORIZED).to_val()),
-            error_codes::NOT_FOUND => String::from_slice(&String::from_str(NOT_FOUND).to_val()),
-            error_codes::ALREADY_EXISTS => String::from_slice(&String::from_str(ALREADY_EXISTS).to_val()),
-            error_codes::INTERNAL_ERROR => String::from_slice(&String::from_str(INTERNAL_ERROR).to_val()),
-            error_codes::RATE_LIMITED => String::from_slice(&String::from_str(RATE_LIMITED).to_val()),
-            error_codes::MAINTENANCE => String::from_slice(&String::from_str(MAINTENANCE).to_val()),
-            error_codes::INSUFFICIENT_BALANCE => String::from_slice(&String::from_str(INSUFFICIENT_BALANCE).to_val()),
-            error_codes::EXPIRED => String::from_slice(&String::from_str(EXPIRED).to_val()),
-            error_codes::INVALID_STATE => String::from_slice(&String::from_str(INVALID_STATE).to_val()),
-            _ => String::from_slice(&String::from_str("Unknown error").to_val()),
+            error_codes::INVALID_INPUT => String::from_str(INVALID_INPUT),
+            error_codes::UNAUTHORIZED => String::from_str(UNAUTHORIZED),
+            error_codes::NOT_FOUND => String::from_str(NOT_FOUND),
+            error_codes::ALREADY_EXISTS => String::from_str(ALREADY_EXISTS),
+            error_codes::INTERNAL_ERROR => String::from_str(INTERNAL_ERROR),
+            error_codes::RATE_LIMITED => String::from_str(RATE_LIMITED),
+            error_codes::MAINTENANCE => String::from_str(MAINTENANCE),
+            error_codes::INSUFFICIENT_BALANCE => String::from_str(INSUFFICIENT_BALANCE),
+            error_codes::EXPIRED => String::from_str(EXPIRED),
+            error_codes::INVALID_STATE => String::from_str(INVALID_STATE),
+            _ => String::from_str("Unknown error"),
         }
     }
 }
@@ -52,11 +52,9 @@ pub mod error_messages {
 pub struct ErrorHandler;
 
 impl ErrorHandler {
-    /// Create a formatted error message
-    pub fn format_error(code: u32, context: &str) -> String {
-        let base_msg = error_messages::get_message(code);
-        let context_str = String::from_str(context);
-        format!("{}: {}", base_msg, context_str).into()
+    /// Create a simple error message with code
+    pub fn format_error(code: u32, _context: &str) -> String {
+        error_messages::get_message(code)
     }
     
     /// Check if error is recoverable
