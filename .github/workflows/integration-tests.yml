@@ -15,10 +15,6 @@ on:
 jobs:
   integration-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/integration
-
     strategy:
       matrix:
         node-version: [18.x, 20.x]
@@ -31,7 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: tests/integration/package.json
+        cache-dependency-path: package-lock.json
 
     - name: Install Rust stable toolchain
       uses: dtolnay/rust-toolchain@stable
@@ -43,10 +39,10 @@ jobs:
       run: npm ci
 
     - name: Compile contracts
-      run: npm run build
+      run: npm --workspace tests/integration run build
 
     - name: Run integration tests
-      run: npm test
+      run: npm --workspace tests/integration test
       timeout-minutes: 30
 
     - name: Upload test results
@@ -58,9 +54,6 @@ jobs:
 
   coverage:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/integration
 
     steps:
     - uses: actions/checkout@v4
@@ -70,13 +63,13 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
-        cache-dependency-path: tests/integration/package.json
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
       run: npm ci
 
     - name: Generate coverage report
-      run: npm run test:coverage || echo "Coverage generation failed - continuing..."
+      run: npm --workspace tests/integration run test:coverage || echo "Coverage generation failed - continuing..."
       timeout-minutes: 30
 
     - name: Upload coverage to Codecov
@@ -90,9 +83,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/integration
 
     steps:
     - uses: actions/checkout@v4
@@ -102,11 +92,11 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
-        cache-dependency-path: tests/integration/package.json
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
       run: npm ci
 
     - name: Run linter
-      run: npm run test:lint || echo "Linting failed - continuing..."
+      run: npm --workspace tests/integration run test:lint || echo "Linting failed - continuing..."
       timeout-minutes: 15
